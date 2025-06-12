@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Absensi Online</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 50px;
+    }
+    input, select, button {
+      margin: 10px;
+      padding: 10px;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Form Absensi Online</h2>
+  <input type="text" id="nama" placeholder="Nama Lengkap" required><br>
+  <input type="text" id="nim" placeholder="NIM / NIP" required><br>
+  <select id="keterangan">
+    <option value="Hadir">Hadir</option>
+    <option value="Izin">Izin</option>
+    <option value="Sakit">Sakit</option>
+  </select><br>
+  <button onclick="submitAbsensi()">Kirim Absensi</button>
+
+  <p id="status"></p>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // GANTI INI DENGAN KONFIGURASI FIREBASE-MU
+    const firebaseConfig = {
+  apiKey: "AIzaSyCZ4Jt6p7zcjOwgCiUep3RCUDIR_Rxz_VM",
+  authDomain: "absensi-ce3ae.firebaseapp.com",
+  databaseURL: "https://absensi-ce3ae-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "absensi-ce3ae",
+  storageBucket: "absensi-ce3ae.appspot.com",
+  messagingSenderId: "104606938299",
+  appId: "1:104606938299:web:71732f4ce89ecdf7d7e59e"
+};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function submitAbsensi() {
+      const nama = document.getElementById("nama").value;
+      const nim = document.getElementById("nim").value;
+      const ket = document.getElementById("keterangan").value;
+      const waktu = new Date().toLocaleString();
+
+      if (nama === "" || nim === "") {
+        document.getElementById("status").innerText = "Isi semua data!";
+        return;
+      }
+
+      db.ref("absensi").push({
+        nama: nama,
+        nim: nim,
+        keterangan: ket,
+        waktu: waktu
+      });
+
+      document.getElementById("status").innerText = "Absensi berhasil dikirim!";
+      document.getElementById("nama").value = "";
+      document.getElementById("nim").value = "";
+    }
+  </script>
+</body>
+</html>
